@@ -1,2 +1,4 @@
 packages:
   - '.'
+minimumReleaseAgeExclude:
+  - '@sveltejs/vite-plugin-svelte@7.1.4'
