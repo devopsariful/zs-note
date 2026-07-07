@@ -1,0 +1,51 @@
+# .znrc — ZarishNote Runtime Config (Starter)
+# Version: v1
+# Location: vault root (.znrc)
+#
+# This is the minimal starter configuration.
+# All settings have GUI equivalents in Settings.
+# For the full schema, see 003-znrc-schema.md or advanced.znrc.
+
+znrc_version: "v1"
+
+vault:
+  name: "My Vault"
+  description: "My ZarishNote vault"
+  language: "en"
+  timezone: "UTC"
+  default_view: "wysiwyg"
+
+editor:
+  theme: "system"
+  font_size: 16
+  auto_save: true
+
+ai:
+  default_provider: "ollama"
+  providers:
+    - name: "ollama"
+      model: "llama3.2:3b"
+      endpoint: "http://localhost:11434/v1"
+      key_id: null
+  context:
+    rag:
+      enabled: false
+
+sandbox:
+  engine: "wasmtime"
+  default_memory_limit: "256MB"
+  default_timeout: "30s"
+  default_network: false
+
+voice:
+  enabled: true
+  model: "whisper-base"
+  language: "en"
+
+ingestion:
+  enabled: true
+  default_output_folder: "inbox"
+
+sync:
+  auto_commit: true
+  commit_message_style: "conventional"

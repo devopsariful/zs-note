@@ -1,0 +1,87 @@
+[package]
+name = "zs-note"
+version = "0.2.0"
+description = "ZarishNote — a modern note-taking application with sandboxed code execution"
+authors = ["Mohammad Ariful Islam <zarishsphere@gmail.com>"]
+edition = "2021"
+
+[build-dependencies]
+tauri-build = { version = "2.6", features = [] }
+
+[lib]
+name = "zs_note_lib"
+crate-type = ["lib", "cdylib", "staticlib"]
+
+[[bin]]
+name = "zs-note"
+path = "src/main.rs"
+
+[dependencies]
+tauri = { version = "2.11", features = ["devtools"] }
+tauri-plugin-shell = "2.3"
+tauri-plugin-dialog = "2.7"
+tauri-plugin-fs = "2.5"
+tauri-plugin-notification = "2.3"
+tauri-plugin-clipboard-manager = "2.3"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+serde_yaml = "0.9"
+toml = "0.8"
+tokio = { version = "1", features = ["full"] }
+anyhow = "1"
+thiserror = "2"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+reqwest = { version = "0.12", features = ["json", "rustls-tls", "stream", "multipart"] }
+url = "2"
+wasmtime = "46"
+wasmtime-wasi = "46"
+git2 = "0.20"
+uuid = { version = "1", features = ["v4", "serde"] }
+chrono = { version = "0.4", features = ["serde"] }
+glob-match = "0.2"
+walkdir = "2"
+async-trait = "0.1"
+futures = "0.3"
+notify = "7"
+parking_lot = "0.12"
+tracing-appender = "0.2"
+base64 = "0.22"
+keyring = "3"
+
+
+quick-xml = "0.40"
+regex-lite = "0.1"
+
+[dev-dependencies]
+tempfile = "3"
+
+[features]
+default = ["custom-protocol"]
+custom-protocol = ["tauri/custom-protocol"]
+voice = ["dep:cpal", "dep:hound", "dep:rodio"]
+
+[dependencies.cpal]
+version = "0.15"
+optional = true
+
+[dependencies.hound]
+version = "3"
+optional = true
+
+[dependencies.whisper-rs]
+version = "0.13"
+optional = true
+
+[dependencies.rodio]
+version = "0.20"
+optional = true
+
+[profile.release]
+strip = true
+lto = true
+codegen-units = 1
+panic = "abort"
+
+[profile.dev]
+debug = true

@@ -1,0 +1,234 @@
+# .znrc — ZarishNote Runtime Config (Advanced)
+# Version: v1
+# Location: vault root (.znrc)
+#
+# Full-featured example with all sections.
+# API keys are NEVER stored here — use OS Keychain.
+# See 003-znrc-schema.md for validation rules.
+
+znrc_version: "v1"
+
+# ==============================================================================
+# VAULT METADATA
+# ==============================================================================
+vault:
+  name: "My Vault"
+  description: "Personal knowledge base"
+  language: "en"
+  timezone: "Asia/Dhaka"
+  default_view: "wysiwyg"
+
+# ==============================================================================
+# EDITOR
+# ==============================================================================
+editor:
+  font_family: "JetBrains Mono, monospace"
+  font_size: 16
+  line_height: 1.7
+  prose_width: "720px"
+  theme: "system"
+  auto_save: true
+  vim_mode: false
+  spell_check: true
+  line_numbers: false
+  word_count: true
+  focus_mode: false
+
+# ==============================================================================
+# AI ENGINE
+# ==============================================================================
+ai:
+  default_provider: "ollama"
+  providers:
+    - name: "openai"
+      model: "gpt-4o"
+      endpoint: "https://api.openai.com/v1"
+      key_id: "openai-api-key"
+      max_tokens: 4096
+      temperature: 0.7
+    - name: "claude"
+      model: "claude-sonnet-4-6"
+      endpoint: "https://api.anthropic.com/v1"
+      key_id: "anthropic-api-key"
+      max_tokens: 8192
+      temperature: 0.7
+    - name: "gemini"
+      model: "gemini-2.5-pro"
+      endpoint: "https://generativelanguage.googleapis.com/v1beta"
+      key_id: "gemini-api-key"
+      max_tokens: 8192
+    - name: "deepseek"
+      model: "deepseek-chat"
+      endpoint: "https://api.deepseek.com/v1"
+      key_id: "deepseek-api-key"
+      max_tokens: 4096
+    - name: "ollama"
+      model: "llama3.2:3b"
+      endpoint: "http://localhost:11434/v1"
+      key_id: null
+    - name: "custom"
+      model: "my-model"
+      endpoint: "http://localhost:8080/v1"
+      key_id: null
+      max_tokens: 2048
+  context:
+    core_files:
+      - "README.md"
+      - "context/project-overview.md"
+    rag:
+      enabled: true
+      chunking:
+        size: 512
+        overlap: 50
+        strategy: "semantic"
+      store:
+        type: "lancedb"
+        path: ".znrc-vectors"
+        embedding_model: "all-MiniLM-L6-v2"
+      index_rules:
+        include: ["*.md", "*.txt"]
+        exclude: [".znrc-vectors/**", ".git/**", "node_modules/**"]
+    rules:
+      - name: "formal-writing"
+        pattern: "docs/**"
+        instruction: "Use formal, professional language. Avoid contractions."
+        priority: 100
+  image_generation:
+    provider: "openai"
+    model: "dall-e-3"
+    key_id: "openai-api-key"
+    output_folder: "assets/ai-images"
+
+# ==============================================================================
+# SANDBOX ENGINE
+# ==============================================================================
+sandbox:
+  engine: "wasmtime"
+  default_memory_limit: "256MB"
+  default_timeout: "30s"
+  default_network: false
+  network:
+    default_policy: "deny"
+    allowed_outbound:
+      - "api.openai.com"
+      - "api.anthropic.com"
+      - "*.github.com"
+      - "localhost:*"
+
+tools:
+  - name: "run-code"
+    type: "wasm"
+    wasm_path: "tools/run-code.wasm"
+    sandbox:
+      memory_limit: "128MB"
+      timeout: "15s"
+      network: false
+      permissions:
+        - "read:workspace"
+        - "write:stdout"
+  - name: "web-fetch"
+    type: "wasm"
+    wasm_path: "tools/web-fetch.wasm"
+    sandbox:
+      memory_limit: "64MB"
+      timeout: "10s"
+      network: true
+      network_domains:
+        - "*.wikipedia.org"
+        - "*.github.com"
+      permissions:
+        - "read:public-url"
+
+# ==============================================================================
+# MCP SERVERS
+# ==============================================================================
+mcp:
+  servers:
+    - name: "github"
+      transport: "stdio"
+      command: "npx @modelcontextprotocol/server-github"
+      env:
+        GITHUB_TOKEN: "${keychain:github-token}"
+      sandbox: true
+      enabled: true
+    - name: "filesystem"
+      transport: "stdio"
+      command: "npx @modelcontextprotocol/server-filesystem"
+      args: ["--root", "${vault_path}"]
+      sandbox: true
+      enabled: true
+  knowledge_bases:
+    - name: "clinical-guidelines"
+      path: "knowledge/clinical"
+      index_on_start: true
+      formats: ["*.md", "*.pdf"]
+
+# ==============================================================================
+# VOICE ENGINE
+# ==============================================================================
+voice:
+  enabled: true
+  model: "whisper-base"
+  language: "en"
+  output_format: "markdown"
+  timestamp_granularity: "sentence"
+  auto_punctuate: true
+  output_folder: "transcripts"
+
+# ==============================================================================
+# INGESTION ENGINE
+# ==============================================================================
+ingestion:
+  enabled: true
+  default_output_folder: "inbox"
+
+# ==============================================================================
+# PUBLISHING
+# ==============================================================================
+publish:
+  targets:
+    - name: "github-pages"
+      type: "github"
+      repo: "YOUR_USERNAME/my-blog"
+      branch: "gh-pages"
+      key_id: "github-token"
+      rss:
+        enabled: true
+        title: "My Blog"
+        description: "Notes and writings"
+        base_url: "https://YOUR_USERNAME.github.io/my-blog"
+  image_hosting:
+    provider: "github"
+    repo: "YOUR_USERNAME/assets"
+    branch: "main"
+    path: "images/"
+    key_id: "github-token"
+    cdn_base_url: "https://raw.githubusercontent.com/YOUR_USERNAME/assets/main/images"
+
+# ==============================================================================
+# SYNC / GIT
+# ==============================================================================
+sync:
+  auto_commit: true
+  commit_message_style: "conventional"
+  commit_author: "ZarishNote <zarishnote@local>"
+  ignore_patterns:
+    - ".znrc-vectors/**"
+    - ".git/**"
+    - "*.lock"
+
+# ==============================================================================
+# PLUGINS
+# ==============================================================================
+plugins:
+  enabled: true
+  install_dir: ".znrc-plugins"
+
+# ==============================================================================
+# SECURITY
+# ==============================================================================
+security:
+  vault_isolation: true
+  block_env_access: true
+  audit_log: true
+  audit_log_path: ".znrc-audit.log"

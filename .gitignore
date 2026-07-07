@@ -1,0 +1,16 @@
+node_modules/
+target/
+dist/
+!dist/index.html
+.env
+.env.local
+*.local
+.DS_Store
+*.log
+.cache/
+__pycache__/
+*.pyc
+*.pyo
+.agents/*
+
+

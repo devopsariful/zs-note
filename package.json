@@ -1,0 +1,51 @@
+{
+  "name": "zs-note",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build && tauri build",
+    "preview": "vite preview",
+    "lint": "tsc --noEmit && eslint src/",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@milkdown/core": "^7.21.2",
+    "@milkdown/ctx": "^7.21.2",
+    "@milkdown/plugin-clipboard": "^7.21.2",
+    "@milkdown/plugin-cursor": "^7.21.2",
+    "@milkdown/plugin-history": "^7.21.2",
+    "@milkdown/plugin-listener": "^7.21.2",
+    "@milkdown/plugin-math": "^7.5.9",
+    "@milkdown/plugin-table": "^5.3.1",
+    "@milkdown/plugin-tooltip": "^7.21.2",
+    "@milkdown/preset-commonmark": "^7.21.2",
+    "@milkdown/preset-gfm": "^7.21.2",
+    "@milkdown/prose": "^7.21.2",
+    "@milkdown/utils": "^7.21.2",
+    "@tauri-apps/api": "^2.11.1",
+    "@tauri-apps/plugin-clipboard-manager": "^2.3.2",
+    "@tauri-apps/plugin-dialog": "^2.7.1",
+    "@tauri-apps/plugin-fs": "^2.5.1",
+    "@tauri-apps/plugin-notification": "^2.3.3",
+    "@tauri-apps/plugin-shell": "^2.3.5",
+    "katex": "^0.17.0",
+    "mermaid": "^11.16.0"
+  },
+  "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "^7.1.2",
+    "@tauri-apps/cli": "^2.11.3",
+    "svelte": "^5.56.3",
+    "svelte-check": "^4.7.0",
+    "typescript": "^6.0.3",
+    "vite": "^8.1.0"
+  },
+  "packageManager": "pnpm@11.5.1",
+  "engines": {
+    "node": "^24.15.0",
+    "pnpm": "^11.5.1"
+  },
+  "pnpm": {
+    "minimumReleaseAge": 0
+  }
+}

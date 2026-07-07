@@ -1,0 +1,62 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "zarishnote-ingest"
+version = "0.2.0"
+description = "Document to Markdown ingestion engine for ZarishNote"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+
+dependencies = [
+    "markitdown[all]>=0.1.6",
+    "defusedxml>=0.7.1",
+    "charset-normalizer>=3.3.0",
+    "markdownify>=0.14.0",
+    "requests>=2.31.0",
+    "beautifulsoup4>=4.15.0",
+    "feedparser>=6.0.12",
+]
+
+[project.optional-dependencies]
+pdf = ["pdfminer.six", "pdfplumber"]
+docx = ["mammoth"]
+pptx = ["python-pptx"]
+xlsx = ["pandas", "openpyxl"]
+epub = ["ebooklib"]
+youtube = ["youtube-transcript-api"]
+all = [
+    "zarishnote-ingest[pdf]",
+    "zarishnote-ingest[docx]",
+    "zarishnote-ingest[pptx]",
+    "zarishnote-ingest[xlsx]",
+    "zarishnote-ingest[epub]",
+    "zarishnote-ingest[youtube]",
+]
+test = [
+    "pytest>=7.0",
+    "pytest-cov>=4.0",
+]
+dev = [
+    "zarishnote-ingest[test]",
+    "zarishnote-ingest[all]",
+]
+
+[project.urls]
+homepage = "https://github.com/zarishsphere/zs-note"
+repository = "https://github.com/zarishsphere/zs-note"
+
+[project.scripts]
+zarishnote-ingest = "zarishnote_ingest.cli:main"
+
+[tool.hatch.envs.default]
+dependencies = ["zarishnote-ingest[test]"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/zarishnote_ingest"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "-v --tb=short"
