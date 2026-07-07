@@ -36,7 +36,7 @@ reqwest = { version = "0.12", features = ["json", "rustls-tls", "stream", "multi
 url = "2"
 wasmtime = "46"
 wasmtime-wasi = "46"
-git2 = "0.20"
+git2 = "0.21"
 uuid = { version = "1", features = ["v4", "serde"] }
 chrono = { version = "0.4", features = ["serde"] }
 glob-match = "0.2"
