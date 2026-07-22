@@ -52,7 +52,7 @@ impl MCPClient {
                             .collect()
                     })
                     .unwrap_or_default();
-                Box::new(transport::StdioTransport::new(&command, args))
+                Box::new(transport::StdioTransport::new(&command, args)?)
             }
             TransportType::Http => {
                 let url = config["url"]

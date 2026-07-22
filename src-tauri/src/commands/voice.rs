@@ -451,7 +451,7 @@ pub fn voice_is_recording() -> Result<bool, String> {
 }
 
 /// Stop the active recording, write the temporary WAV file, transcribe it
-/// with whisper, and return the recognised text.
+/// with whisper, and return the recognized text.
 #[tauri::command]
 pub fn voice_stop_recording() -> Result<VoiceRecognitionResult, String> {
     let active = RECORDING

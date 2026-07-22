@@ -1,4 +1,4 @@
-use anyhow::{bail, Result};
+use anyhow::{bail, Context, Result};
 use async_trait::async_trait;
 use serde_json::Value;
 use tokio::io::{AsyncBufReadExt, AsyncWriteExt, BufReader};
@@ -31,7 +31,7 @@ pub struct StdioTransport {
 }
 
 impl StdioTransport {
-    pub fn new(command: &str, args: Vec<String>) -> Self {
+    pub fn new(command: &str, args: Vec<String>) -> Result<Self> {
         let mut child = Command::new(command)
             .args(&args)
             .stdin(std::process::Stdio::piped())
@@ -39,22 +39,18 @@ impl StdioTransport {
             .stderr(std::process::Stdio::inherit())
             .kill_on_drop(true)
             .spawn()
-            .unwrap_or_else(|e| {
-                // Log the error rather than panicking — callers handle connection failure
-                tracing::error!("Failed to spawn MCP subprocess '{}': {}", command, e);
-                panic!("MCP subprocess spawn failed: {}", e)
-            });
+            .with_context(|| format!("Failed to spawn MCP subprocess '{}'", command))?;
 
-        let stdin = child.stdin.take().expect("Failed to capture stdin");
-        let stdout = child.stdout.take().expect("Failed to capture stdout");
+        let stdin = child.stdin.take().context("Failed to capture stdin")?;
+        let stdout = child.stdout.take().context("Failed to capture stdout")?;
         let reader = BufReader::new(stdout).lines();
 
-        Self {
+        Ok(Self {
             process: Mutex::new(child),
             stdin: Mutex::new(stdin),
             stdout: Mutex::new(reader),
             request_id: Mutex::new(0),
-        }
+        })
     }
 
     async fn next_id(&self) -> u64 {
@@ -263,5 +259,25 @@ impl McpTransport for HttpTransport {
 
     async fn close(&mut self) -> Result<()> {
         Ok(())
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::StdioTransport;
+
+    #[test]
+    fn stdio_transport_spawn_failure_returns_error() {
+        let command = format!(
+            "zarishnote-definitely-missing-mcp-server-{}",
+            std::process::id()
+        );
+
+        let result = StdioTransport::new(&command, Vec::new());
+
+        assert!(
+            result.is_err(),
+            "invalid MCP command should return an error"
+        );
     }
 }

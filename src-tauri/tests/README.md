@@ -46,7 +46,7 @@ RUST_LOG=debug cargo test --test integration
 | `test_git_engine` | Commit‑message generation (`generate_commit_message`), change‑type detection |
 | `test_mcp_protocol` | JSON‑RPC parsing (request, response, error, notification), helper builders, `McpToolRouter` routing and confirmation logic |
 | `test_sandbox_executor` | `CapabilityChecker` (permissions, network, path), `glob_match`, `SandboxNetworkProxy` allow/block logic |
-| `test_vector_store` | `VectorStore` index/query/delete/rebuild, chunking, deduplication, empty‑store behaviour |
+| `test_vector_store` | `VectorStore` index/query/delete/rebuild, chunking, deduplication, empty‑store behavior |
 
 ## Design Principles
 
@@ -55,6 +55,6 @@ RUST_LOG=debug cargo test --test integration
 2. **No hard‑coded paths** — all filesystem operations use `tempfile::TempDir`.
 3. **Public API only** — integration tests exercise the public interface of
    `zs_note_lib`; private implementation details are left to unit tests.
-4. **Focused** — each test covers exactly one behaviour.
+4. **Focused** — each test covers exactly one behavior.
 5. **Deterministic** — tests are self‑contained and do not rely on global
    state or environment variables.
