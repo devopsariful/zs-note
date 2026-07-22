@@ -59,7 +59,7 @@ tempfile = "3"
 [features]
 default = ["custom-protocol"]
 custom-protocol = ["tauri/custom-protocol"]
-voice = ["dep:cpal", "dep:hound", "dep:rodio"]
+voice = ["dep:cpal", "dep:hound", "dep:whisper-rs", "dep:rodio"]
 
 [dependencies.cpal]
 version = "0.17"
