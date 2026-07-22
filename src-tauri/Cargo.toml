@@ -62,7 +62,7 @@ custom-protocol = ["tauri/custom-protocol"]
 voice = ["dep:cpal", "dep:hound", "dep:whisper-rs", "dep:rodio"]
 
 [dependencies.cpal]
-version = "0.17"
+version = "0.18"
 optional = true
 
 [dependencies.hound]
