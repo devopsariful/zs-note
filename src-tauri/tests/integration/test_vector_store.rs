@@ -2,7 +2,7 @@
 //!
 //! Tests the public API of [`zs_note_lib::vector`]:
 //! indexing, querying, deletion, rebuild, deduplication and
-//! empty‑store behaviour.
+//! empty‑store behavior.
 
 use std::fs;
 use std::path::{Path, PathBuf};
@@ -61,17 +61,23 @@ fn test_vector_store_index_and_query() {
 fn test_vector_store_query_multiple_docs() {
     let (_dir, store) = setup_temp_store();
 
+    let alpha = PathBuf::from("alpha.md");
+    let beta = PathBuf::from("beta.md");
+
+    store.index_document(&alpha, "The quick brown fox").unwrap();
     store
-        .index_document(&PathBuf::from("alpha.md"), "The quick brown fox")
-        .unwrap();
-    store
-        .index_document(&PathBuf::from("beta.md"), "jumps over the lazy dog")
+        .index_document(&beta, "jumps over the lazy dog")
         .unwrap();
 
-    // Both documents share no common words; "fox" only appears in alpha
+    // "fox" only appears in alpha, so the query should return alpha exactly.
     let results = store.query("fox", "default", 10);
     assert_eq!(results.len(), 1, "only alpha should match 'fox'");
-    assert!(results[0].path.to_string_lossy().contains("alpha"));
+    assert_eq!(results[0].path, alpha);
+
+    // "dog" only appears in beta, so the query should return beta exactly.
+    let results = store.query("dog", "default", 10);
+    assert_eq!(results.len(), 1, "only beta should match 'dog'");
+    assert_eq!(results[0].path, beta);
 }
 
 // ---------------------------------------------------------------------------
