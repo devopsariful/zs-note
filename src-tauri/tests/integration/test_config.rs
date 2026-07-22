@@ -1,6 +1,6 @@
 //! Integration tests for configuration management.
 //!
-//! Covers default construction, YAML round‑trip serialisation and
+//! Covers default construction, YAML round‑trip serialization and
 //! the validation logic on [`Config`](zs_note_lib::config::Config).
 
 use std::path::Path;
