@@ -86,7 +86,7 @@ impl GitEngine {
         ))?;
 
         for entry in statuses.iter() {
-            if let Some(path) = entry.path() {
+            if let Ok(path) = entry.path() {
                 let _ = index.add_path(Path::new(path));
             }
         }
@@ -198,7 +198,7 @@ impl GitEngine {
 
         let mut unstaged = Vec::new();
         for entry in statuses.iter() {
-            if let Some(path) = entry.path() {
+            if let Ok(path) = entry.path() {
                 unstaged.push(path.to_string());
             }
         }
@@ -207,15 +207,18 @@ impl GitEngine {
         let behind = 0;
 
         if let Ok(head) = repo.head() {
-            let head_oid = head.peel_to_commit().map(|c| c.id()).unwrap_or(Oid::zero());
-            if let Some(branch_name) = head.shorthand() {
+            let head_oid = head
+                .peel_to_commit()
+                .map(|c| c.id())
+                .unwrap_or(Oid::ZERO_SHA1);
+            if let Ok(branch_name) = head.shorthand() {
                 if let Ok(branch) = repo.find_branch(branch_name, git2::BranchType::Local) {
                     if let Ok(upstream) = branch.upstream() {
                         let upstream_oid = upstream
                             .get()
                             .peel_to_commit()
                             .map(|c| c.id())
-                            .unwrap_or(Oid::zero());
+                            .unwrap_or(Oid::ZERO_SHA1);
 
                         let mut revwalk = repo.revwalk()?;
                         revwalk.push(upstream_oid)?;
