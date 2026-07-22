@@ -2,8 +2,8 @@
 
 > **A free, open-source, ultra-lightweight WYSIWYG Markdown editor with a sandboxed private AI assistant.**
 
-[![GitHub](https://img.shields.io/badge/zarishsphere/zs--note-181717?logo=github)](https://github.com/zarishsphere/zs-note)
-[![CI](https://github.com/zarishsphere/zs-note/actions/workflows/ci.yml/badge.svg)](https://github.com/zarishsphere/zs-note/actions/workflows/ci.yml)
+[![GitHub](https://img.shields.io/badge/devopsariful/zs--note-181717?logo=github)](https://github.com/devopsariful/zs-note)
+[![CI](https://github.com/devopsariful/zs-note/actions/workflows/ci.yml/badge.svg)](https://github.com/devopsariful/zs-note/actions/workflows/ci.yml)
 
 ZarishNote is a desktop note-taking application that combines a rich Markdown editor (Milkdown/ProseMirror) with a sandboxed Wasmtime-based AI assistant — all running locally on your machine.
 
@@ -37,23 +37,25 @@ ZarishNote is a desktop note-taking application that combines a rich Markdown ed
 
 ## Getting Started
 
-*Prerequisites: Node.js ≥24, pnpm ≥11, Rust toolchain (rustup), Tauri system dependencies.*
+*Prerequisites: Node.js ≥24.15, pnpm ≥11.5, Rust toolchain (rustup), Tauri system dependencies.*
 
 ```bash
 # Clone
-git clone git@github.com:zarishsphere/zs-note.git
+git clone https://github.com/devopsariful/zs-note.git
 cd zs-note
 
 # Install frontend deps
 pnpm install
 
 # Run in dev mode
-pnpm tauri dev
+pnpm dev:tauri
+
+# Or just run Vite dev server (without Tauri window)
+pnpm dev
 ```
 
-> **Status:** CI pipeline is fully green — `cargo fmt`, `cargo clippy`, `cargo test` (107/107), `pnpm typecheck`, `pytest` (41/41), and `ruff` all pass. The project compiles and tests pass on all three platforms (ubuntu-latest, macos-latest, windows-latest).
->
-> **Note:** v0.2.0 Stable Release — see [GitHub Releases](https://github.com/zarishsphere/zs-note/releases).
+> **Status:** Current version — v0.2.0  
+> **CI Status:** See [GitHub Actions](https://github.com/devopsariful/zs-note/actions) for latest build status.
 
 ---
 
@@ -66,64 +68,61 @@ zs-note/
 │   ├── app.css                   # Global styles / CSS variables
 │   └── lib/
 │       ├── components/           # Svelte components
-│       │   ├── App.svelte        # Root layout
-│       │   ├── Editor.svelte     # Editor orchestrator (WYSIWYG/Source/Split)
-│       │   ├── MilkdownEditor.svelte
-│       │   ├── SourceEditor.svelte
-│       │   ├── Sidebar.svelte    # File tree + search + tags
-│       │   ├── AIPanel.svelte    # AI chat panel
-│       │   ├── Settings.svelte   # Settings modal
-│       │   ├── ...               # 16 more components
-│       │   └── Modal.svelte      # Reusable modal wrapper
 │       ├── stores/               # Svelte 5 rune stores (.svelte.ts)
 │       ├── commands/             # Tauri invoke wrappers
 │       ├── milkdown/             # Milkdown editor setup
 │       └── types.ts              # TypeScript interfaces
-├── src-tauri/                    # Rust backend (Tauri)
-│   └── src/
-│       ├── main.rs / lib.rs      # Entry + plugin registration
-│       ├── commands/             # Tauri command handlers
-│       │   ├── editor.rs         # File CRUD
-│       │   ├── ai.rs             # AI chat (OpenAI, Claude, Gemini, Ollama)
-│       │   ├── sandbox.rs        # WASM execution
-│       │   ├── git.rs            # Git operations
-│       │   ├── ingest.rs         # Ingestion subprocess
-│       │   ├── mcp.rs            # MCP tool routing
-│       │   └── search.rs / voice.rs / config.rs
-│       ├── sandbox/              # Wasmtime sandbox engine
-│       ├── ai/                   # AI provider implementations
-│       ├── git/                  # Git engine (commit, history, sync)
-│       ├── mcp/                  # MCP client (transport, protocol, router)
-│       ├── vector/               # Vector store (index, query)
-│       ├── config.rs / types.rs / logging.rs
-│       └── capabilities/         # Tauri v2 capability permissions
+├── src-tauri/                    # Rust backend (Tauri v2)
+│   ├── src/
+│   │   ├── main.rs / lib.rs      # Entry + plugin registration
+│   │   ├── commands/             # Tauri command handlers
+│   │   ├── sandbox/              # Wasmtime sandbox engine
+│   │   ├── ai/                   # AI provider implementations
+│   │   ├── git/                  # Git engine
+│   │   ├── mcp/                  # MCP client
+│   │   ├── vector/               # Vector store
+│   │   ├── config.rs / types.rs  # Configuration and types
+│   │   └── capabilities/         # Tauri v2 capability permissions
+│   ├── Cargo.toml
+│   ├── tauri.conf.json
+│   └── tests/                    # Integration tests
 ├── ingestion/                    # Python ingestion engine
-│   └── src/zarishnote_ingest/
-│       ├── cli.py                # CLI entry point
-│       ├── markitdown.py         # MarkItDown wrapper
-│       ├── converters/           # 12 format converters
-│       └── ...
-├── package.json / tsconfig.json / vite.config.ts / svelte.config.js
-└── Cargo.toml / tauri.conf.json / build.rs
+│   ├── src/zarishnote_ingest/
+│   │   ├── cli.py                # CLI entry point
+│   │   ├── converters/           # Format converters
+│   │   └── ...
+│   └── pyproject.toml
+├── docs/                         # Documentation
+│   ├── README.md                 # Blueprint specification
+│   ├── TODO.md                   # Implementation status
+│   ├── ZARISHNOTE-COMPLETE-GUIDE.md
+│   └── [subdirectories for specs]
+├── scripts/
+│   └── check-consistency.sh      # Repository consistency checker
+├── package.json                  # Frontend package config
+├── tsconfig.json                 # TypeScript config
+├── pnpm-workspace.yaml           # pnpm workspace config
+├── vite.config.ts                # Vite build config
+└── svelte.config.js              # Svelte config
 ```
 
 ---
 
 ## Build Status
 
-All CI checks pass on `main`:
+See [CI Status](https://github.com/devopsariful/zs-note/actions/workflows/ci.yml) for latest results.
 
-| Check | Status |
+| Check | Tool |
 |---|---|
-| Format (`cargo fmt --check`) | ✅ Passes |
-| Lint (`cargo clippy`) | ✅ Passes (warnings allowed) |
-| Tests (`cargo test`) | ✅ 107/107 pass |
-| TypeScript (`pnpm typecheck`) | ✅ Passes |
-| Python lint (ruff) | ✅ Passes |
+| Format | `cargo fmt --check` |
+| Lint | `cargo clippy` |
+| Tests | `cargo test` |
+| TypeScript | `pnpm typecheck` |
+| Python | `ruff check src/` |
 
 ## Features (Planned / In Progress)
 
-See the [blueprint TODO](docs/TODO.md) for a complete status breakdown.
+See the [blueprint TODO](docs/TODO.md) for detailed status breakdown.
 
 | Feature | Status |
 |---|---|
@@ -133,7 +132,7 @@ See the [blueprint TODO](docs/TODO.md) for a complete status breakdown.
 | Git auto-commit + history | 🏗 Scaffolded |
 | Wasmtime sandbox | 🏗 Scaffolded |
 | AI chat (OpenAI, Claude, Gemini, Ollama) | 🏗 Scaffolded |
-| Document ingestion (PDF, DOCX, ...) | 🏗 Scaffolded |
+| Document ingestion | 🏗 Scaffolded |
 | MCP tool integration | 🏗 Scaffolded |
 | Vector store / RAG | 🏗 Scaffolded |
 | Voice dictation | 🏗 Scaffolded |
@@ -147,9 +146,38 @@ The application follows a three-layer architecture:
 
 1. **Rust Backend** (`src-tauri/`) — Tauri v2 commands handle file I/O, Git operations, sandboxed WASM execution, AI provider communication, MCP tool routing, and vector store indexing.
 2. **Svelte Frontend** (`src/`) — Reactive UI with Milkdown/ProseMirror for the editor, file tree sidebar, AI chat panel, settings, and modals.
-3. **Python Ingestion Engine** (`ingestion/`) — Standalone CLI that converts documents (PDF, DOCX, PPTX, XLSX, EPUB, HTML, CSV, Jupyter, YouTube, Wikipedia, RSS, SERP) to Markdown via MarkItDown + custom converters.
+3. **Python Ingestion Engine** (`ingestion/`) — Standalone CLI that converts documents (PDF, DOCX, PPTX, XLSX, EPUB, HTML, CSV, Jupyter, YouTube, Wikipedia, RSS, SERP) to Markdown.
 
 All AI tools, MCP servers, and plugins execute inside a Wasmtime sandbox with configurable capabilities (filesystem scoping, network allow-list, memory limits, timeouts).
+
+---
+
+## Development
+
+### Run consistency checks
+
+```bash
+# Check for inconsistencies
+pnpm check:consistency
+
+# Auto-fix common issues
+pnpm check:consistency --fix
+```
+
+### Run all tests
+
+```bash
+# Frontend
+pnpm typecheck
+
+# Backend
+cd src-tauri
+cargo test
+
+# Python ingestion
+cd ingestion
+pytest -v
+```
 
 ---
 
@@ -157,14 +185,15 @@ All AI tools, MCP servers, and plugins execute inside a Wasmtime sandbox with co
 
 1. Read the [blueprint specifications](docs/README.md) to understand the design.
 2. Check the [TODO](docs/TODO.md) for open tasks.
-3. File issues at [github.com/zarishsphere/zs-note/issues](https://github.com/zarishsphere/zs-note/issues).
+3. File issues at [github.com/devopsariful/zs-note/issues](https://github.com/devopsariful/zs-note/issues).
+4. Run `pnpm check:consistency` before committing.
 
 ---
 
 ## License
 
-MIT — see [LICENSE](LICENSE) (pending).
+MIT — see [LICENSE](LICENSE)
 
 ---
 
-*Built by ZarishSphere Foundation*
+*Maintained by devopsariful*
