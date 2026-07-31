@@ -46,7 +46,7 @@ futures = "0.3"
 notify = "8"
 parking_lot = "0.12"
 tracing-appender = "0.2"
-base64 = "0.22"
+base64 = "0.23"
 keyring = "4"
 
 
